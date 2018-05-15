@@ -8,13 +8,14 @@ import java.util.List;
 
 public class Application extends Controller {
 
-    private static void checkTeacher(){
+    private static boolean checkTeacher(){
         checkUser();
 
         User u = (User) renderArgs.get("user");
         if (!u.getType().equals(Constants.User.TEACHER)){
-            return;
+            return false;
         }
+        else return true;
     }
 
     private static void checkUser(){
@@ -43,16 +44,21 @@ public class Application extends Controller {
 
 
     public static void removeStudent(String student) {
-        checkTeacher();
 
-        User.remove(student);
-        index();
+        if (checkTeacher()){
+          User.remove(student);
+          index();
+        }
+
     }
 
 
     public static void setMark(String student) {
+        if(checkTeacher()){
         User u = User.loadUser(student);
         render(u);
+      }
+
     }
 
     public static void doSetMark(String student, Integer mark) {
